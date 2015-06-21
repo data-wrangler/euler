@@ -1,0 +1,57 @@
+jmc-air:euler jmatthew$ python euler72_bruteforce.py 
+
+2015-06-17 18:11:38: calculating phi for integers up to 10000
+2015-06-17 18:11:39: 304191 reduced proper fractions for denominators less than 1000 in 0.409224 seconds
+2015-06-17 18:11:40: 1216587 reduced proper fractions for denominators less than 2000 in 1.286439 seconds
+2015-06-17 18:11:42: 2736187 reduced proper fractions for denominators less than 3000 in 2.253359 seconds
+2015-06-17 18:11:45: 4863601 reduced proper fractions for denominators less than 4000 in 3.342609 seconds
+2015-06-17 18:11:51: 7600457 reduced proper fractions for denominators less than 5000 in 5.463169 seconds
+2015-06-17 18:11:57: 10943163 reduced proper fractions for denominators less than 6000 in 6.549885 seconds
+2015-06-17 18:12:05: 14895145 reduced proper fractions for denominators less than 7000 in 7.522791 seconds
+2015-06-17 18:12:14: 19455781 reduced proper fractions for denominators less than 8000 in 8.869039 seconds
+2015-06-17 18:12:25: 24621517 reduced proper fractions for denominators less than 9000 in 11.402494 seconds
+2015-06-17 18:12:38: 30397485 reduced proper fractions for denominators less than 10000 in 12.805966 seconds
+total 30397485 reduced proper fractions for denominators less than 10000
+2015-06-17 18:12:38: completed in 59.905183 seconds
+
+jmc-air:euler jmatthew$ python euler72.py
+
+2015-06-17 18:14:51: generating prime list
+2015-06-17 18:14:56: generated primes up to 1055363 in 5.086442 seconds
+
+BRUTE CALCULATION OF PHI
+2015-06-17 18:14:56: calculating phi for integers up to 10000
+2015-06-17 18:14:56: 304191 reduced proper fractions for denominators less than 1000 in 0.02309 seconds
+2015-06-17 18:14:56: 1216587 reduced proper fractions for denominators less than 2000 in 0.048436 seconds
+2015-06-17 18:14:56: 2736187 reduced proper fractions for denominators less than 3000 in 0.059514 seconds
+2015-06-17 18:14:56: 4863601 reduced proper fractions for denominators less than 4000 in 0.072362 seconds
+2015-06-17 18:14:56: 7600457 reduced proper fractions for denominators less than 5000 in 0.088954 seconds
+2015-06-17 18:14:56: 10943163 reduced proper fractions for denominators less than 6000 in 0.099228 seconds
+2015-06-17 18:14:56: 14895145 reduced proper fractions for denominators less than 7000 in 0.113012 seconds
+2015-06-17 18:14:56: 19455781 reduced proper fractions for denominators less than 8000 in 0.134656 seconds
+2015-06-17 18:14:56: 24621517 reduced proper fractions for denominators less than 9000 in 0.13405 seconds
+2015-06-17 18:14:57: 30397485 reduced proper fractions for denominators less than 10000 in 0.153063 seconds
+total 30397485 reduced proper fractions for denominators less than 10000
+2015-06-17 18:14:57: completed in 6.013038 seconds
+Summary statistics for 0 tracked subroutines:
+
+FAST CALCULATION OF PHI
+2015-06-17 18:14:57: calculating phi for integers up to 10000
+2015-06-17 18:14:57: 304191 reduced proper fractions for denominators less than 1000 in 0.035229 seconds
+2015-06-17 18:14:57: 1216587 reduced proper fractions for denominators less than 2000 in 0.052784 seconds
+2015-06-17 18:14:57: 2736187 reduced proper fractions for denominators less than 3000 in 0.065068 seconds
+2015-06-17 18:14:57: 4863601 reduced proper fractions for denominators less than 4000 in 0.080123 seconds
+2015-06-17 18:14:57: 7600457 reduced proper fractions for denominators less than 5000 in 0.098009 seconds
+2015-06-17 18:14:57: 10943163 reduced proper fractions for denominators less than 6000 in 0.101095 seconds
+2015-06-17 18:14:57: 14895145 reduced proper fractions for denominators less than 7000 in 0.112455 seconds
+2015-06-17 18:14:57: 19455781 reduced proper fractions for denominators less than 8000 in 0.113737 seconds
+2015-06-17 18:14:57: 24621517 reduced proper fractions for denominators less than 9000 in 0.128352 seconds
+2015-06-17 18:14:57: 30397485 reduced proper fractions for denominators less than 10000 in 0.138943 seconds
+total 30397485 reduced proper fractions for denominators less than 10000
+2015-06-17 18:14:57: completed in 6.939117 seconds
+Summary statistics for 4 tracked subroutines:
+lookup: 3918 calls, 0:00:00.009879 total (avg 2.52143950995e-06 seconds)
+add phi to dict: 6081 calls, 0:00:00.014676 total (avg 2.41341884558e-06 seconds)
+calc phi: 6081 calls, 0:00:00.051128 total (avg 8.40782765992e-06 seconds)
+fast factoring: 9999 calls, 0:00:00.752037 total (avg 7.52112211221e-05 seconds)
+
