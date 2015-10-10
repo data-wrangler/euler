@@ -56,7 +56,7 @@ class primeListDb(object):
         elif self.primeSearch(x):
             return True
         elif x > self.primes[-1]:
-            _=self.add_til(x)
+            self.add_til(x)
             if self.primeSearch(x):
                 return True
             else:
@@ -153,7 +153,9 @@ def faster_phi(n,primes):
     rpf=n
     remainder=pf_n
     while remainder>0:
-        i=int(round(math.log(remainder,2),10))
+        i=int(round(math.log(remainder,2),10)) 
+        # rounding is necessary to account for small errors in logarithms inherent to floating point math. 
+        # This .10 precision works up to 1m at least, but could fail at higher n.
         p_i=primes.getList()[i]
         rpf=rpf*(p_i-1)/p_i
         remainder-=2**i
