@@ -133,15 +133,53 @@ for factors n/2 > f >1, solutions:
     s(12)=4n,25; 8n,28; 258n,48
     s(17)=
 """
-factor_dict={1:0, 2:1, 3:2}
+factor_dict={1:1, 2:2, 3:3, 4:5}
 
-def fast_get_to(target):
-    try:
-        return factor_dict[target]
-    except:
-        solutions=0
-        for i in range(with_factors_less_than,0,-1):
-            this_solution=[i]
-            for rest_of_solution in get_to(target-i,i):
-                all_solutions.append(this_solution+rest_of_solution)
-        return all_solutions
+def n_get_to(target,with_factors_less_than=None):
+    if target==0:
+        return 1
+    elif target==1:
+        return 1
+    all_solutions=0
+    if not with_factors_less_than or target<with_factors_less_than:
+        with_factors_less_than=target
+    for i in range(with_factors_less_than,0,-1):
+        all_solutions+=n_get_to(target-i,i)
+    return all_solutions
+
+def fast_get_to(target,with_factors_less_than=None):
+    if target==0:
+        return 1
+    elif target==1:
+        return 1
+    all_solutions=0
+    set_solution=False
+    if not with_factors_less_than or target<=with_factors_less_than:
+        try:
+            all_solutions=factor_dict[target]
+            return all_solutions
+        except:
+            set_solution=True
+            with_factors_less_than=target
+    for i in range(with_factors_less_than,0,-1):
+        all_solutions+=fast_get_to(target-i,i)
+    if set_solution:
+        factor_dict[target]=all_solutions
+    return all_solutions
+
+import qa
+v=qa.v
+srt=qa.srt()
+
+target_n=51
+
+if v:first_tick=tick=qa.tick("starting factor finding for n up to {0!s}".format(target_n))
+for i in range(1,target_n+1):
+    if v:tick=qa.tock(tick,"{0!s} = {1!s} additive paths".format(i, fast_get_to(i)))
+if v: _=qa.tock(first_tick,"completed")
+
+if v: tick=qa.tick("starting factor finding for n={0!s}".format(100))
+print "{0!s} = {1!s} additive paths".format(100, fast_get_to(100))
+if v: _=qa.tock(tick,"completed")
+
+

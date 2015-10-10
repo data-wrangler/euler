@@ -2,245 +2,201 @@
 Euler 96: Su Doku
 
 Grid 01
-003020600
-900305001
-001806400
-008102900
-700000008
-006708200
-002609500
-800203009
-005010300
+003 020 600
+900 305 001
+001 806 400
+
+008 102 900
+700 000 008
+006 708 200
+
+002 609 500
+800 203 009
+005 010 300
 
 """
 
-p1=['003020600',\
-'900305001',\
-'001806400',\
-'008102900',\
-'700000008',\
-'006708200',\
-'002609500',\
-'800203009',\
-'005010300']
-
-solves=[]
+import qa
+v=qa.v
+srt=qa.srt()
 
 class sudoku:
-	def __init__(self,puzzle):
-		self.grid=[]
-		self.couldBe=[]
-		self.unsolved=[]
-		for cell in puzzle:
-			self.grid.append(int(cell))
-		cindex=0
-		for cell in self.grid:
-			if cell==0:
-				self.couldBe.append([1,2,3,4,5,6,7,8,9])
-				self.unsolved.append([cindex/9,cindex%9])
-			else:
-				self.couldBe.append(None)
-			cindex+=1
-		print "Starting Grid:"
-		self.printGrid()
-		print "Starting Unsolved:"
-		print self.unsolved
-		print ""
-	def getCell(self,r,c):
-		# return the value of cell (r,c)
-		return self.grid[r*9+c]
-	def getRow(self,r):
-		# return row r as a list
-		if r>8: return None
-		return self.grid[r*9:((r+1)*9)]
-	def getCol(self,c):	
-		# return column c as a list
-		if c>8: return None
-		col=[]
-		for i in range(c,81,9):
-			col.append(self.grid[i])
-		return col
-	def getBox(self,r,c):
-		# return values in box (r,c), r,c in (0,2)
-		if r>2 or c>2:return None
-		box=[]
-		for i in range(r*3,(r+1)*3):
-			for j in range(c*3,(c+1)*3):
-				box.append(self.grid[i*9+j])
-		return box
-	def printGrid(self):
-		# prints the sudoku grid all pretty-like
-		r=0;c=0
-		row=''
-		for cell in self.grid:
-			row+=str(cell)
-			c=(c+1)%9
-			if c==0:
-				print row
-				row=''
-				r+=1
-				if r%3==0 and r<9:
-					print '---|---|---'
-			elif c%3==0:
-				row+="|"
-	def printUnsolved(self):
-		# prints a list of unsolved squares and what they could be
-		print "Unsolved:"
-		for [r,c] in self.unsolved:
-			print "(%d,%d) - %s" % (r,c,self.couldBe[r*9+c])
-	def solvePass(self):
-		# winnow couldbe list for unsolved squares
-		# then solve squares with only one couldBe entry
-		if len(self.unsolved)==0:
-			return None
-		self.solved=0
-		self.updated=0
-		for [r,c] in self.unsolved:
-			thisRow=set(self.getRow(r))
-			thisCol=set(self.getCol(c))
-			thisBox=set(self.getBox(r/3,c/3))
-			cb_was=len(self.couldBe[r*9+c])
-			self.couldBe[r*9+c]=list(set(self.couldBe[r*9+c]).difference(thisRow).difference(thisCol).difference(thisBox))
-			if len(self.couldBe[r*9+c])<cb_was:self.updated+=1
-			if len(self.couldBe[r*9+c])==1:
-				self.grid[r*9+c]=self.couldBe[r*9+c][0]
-				self.couldBe[r*9+c]=None
-				self.unsolved.remove([r,c])
-				self.solved+=1
-		return self.solved+self.updated
-	def solve(self):
-		counter=0
-		i=0
-		self.last81=[0]*80+[1]
-		while 1:
-			print "Pass %d" % counter
-			# self.printGrid()
-			self.printUnsolved()
-			e=1
-			while e>0:
-				e=self.solvePass()
-				print e
-				self.last81=self.last81[1:]+[e]
-			if e==0:
-				if counter%4==0:o=self.onlyOptionRow(i)
-				elif counter%4==1:o=self.onlyOptionCol(i)
-				elif counter%4==2:o=self.onlyOptionBox(i/3,i%3)
-				else: i=(i+1)%9
-			elif e==None: break
-			print self.last81[-10:]
-			print sum(self.last81)
-			if sum(self.last81)==0:
-				print "Deadlocked!"
-				break
-			counter+=1
-		print "Final"
-		self.printGrid()
-		solves.append(self.getCell(0,0)*100+self.getCell(0,1)*10+self.getCell(0,2))
-	def onlyOption(self,cellset):
-		# solve squares where they're the only place that number can occur in a row/box
-		rall=[itm for lst in [self.couldBe[i] for i in cellset] if lst for itm in lst]
-		# print rall
-		rlist=[]
-		for item in set(rall):
-			if rall.count(item)==1:
-				rlist.append(item)
-		# print rlist
-		self.solved=0
-		for j in rlist:
-			for k in cellset:
-				if self.couldBe[k]:
-					if self.couldBe[k].__contains__(j):
-						self.couldBe[k]=None
-						self.grid[k]=j
-						self.unsolved.remove([k/9,k%9])
-						self.solved+=1
-						break
-		return self.solved
-	def onlyOptionRow(self,r):
-		thisRow=range(r*9,(r+1)*9)
-		res=self.onlyOption(thisRow)
-		return res
-	def onlyOptionCol(self,c):
-		thisCol=range(c,81,9)
-		res=self.onlyOption(thisCol)
-		return res
-	def onlyOptionBox(self,r,c):
-		thisBox=[i*9+j for i in range(r*3,(r+1)*3) for j in range(c*3,(c+1)*3)]
-		res=self.onlyOption(thisBox)
-		return res
-			
+    # initialize puzzle from text
+    def __init__(self,puzzle):
+        self.grid=[int(cell) for cell in puzzle]
+        self.unsolved=[i for i,cell in enumerate(self.grid) if cell==0]
+        self.couldBe=map(lambda x: [1,2,3,4,5,6,7,8,9] if x == 0 else None,self.grid)
+        _=self.updatePass()
+        if False:
+            print "Starting Grid:"
+            self.printGrid()
+            print "{0!s} unsolved cells".format(len(self.unsolved))
+            print ""
 
+    # return puzzle grid as a string
+    def getPuzzle(self):
+        return ''.join([str(cell) for cell in self.grid])
 
-""" Swaps. The theory is sound, coming back to it.
-	def findSwaps(a):
-		swaps=[]
-		for i in range(0,len(a)):
-			if (a[:i]+a[i+1:]).__contains__(a[i]):
-				foundwhere=(a[:i]+a[i+1:]).index(a[i])
-				if foundwhere>=i: foundwhere+=1
-				swaps.append([i,foundwhere])
-			else:
-				foundwhere=None
-		return swaps
-	def findSwapsRow(self,r):
-		# return row r as a list
-		if r>8: return None
-		testRow=self.couldBe[r*9:((r+1)*9)]
-		rowSwaps=findSwaps(testRow)
-		print rowSwaps
-		for swap in rowSwaps:
-			for i in range(0,9):
-				if swap.__contains__(i):
-					pass
-				if self.couldBe[r*9+i]:
-					print "before: "+ self.couldBe[r*9+i].__str__()
-					self.couldBe[r*9+i]=list(set(self.couldBe[r*9+i]).difference(set(self.couldBe[r*9+r[0]])))
-					print "after: "+ self.couldBe[r*9+i].__str__()
-	def findSwapsCol(self,c):	
-		# return column c as a list
-		if c>8: return None
-		col=[]
-		for i in range(c,81,9):
-			col.append(self.grid[i])
-		return col
-	def findSwapsBox(self,r,c):
-		# return values in box (r,c), r,c in (0,2)
-		if r>2 or c>2:return None
-		box=[]
-		for i in range(r*3,(r+1)*3):
-			for j in range(c*3,(c+1)*3):
-				box.append(self.grid[i*9+j])
-		return box
+    # set puzzle grid from a string
+    def setPuzzle(self,puzzle_string):
+        for old,new in zip(self.grid,[int(cell) for cell in puzzle_string]):
+            if old!=new and old!=0:
+                print "New puzzle setting contradicts original puzzle!"
+        self.grid=[int(cell) for cell in puzzle_string]
+
+    # return indexes of row r as a list
+    def getRow(self,r):
+        if r>8: return None
+        return range(r*9,(r+1)*9)
+
+    # return indexes of column c as a list
+    def getCol(self,c):	
+        if c>8: return None
+        return [i for i in range(81) if i%9==c]
+
+    # return indexes of box (r,c), r,c in (0,2)
+    def getBox(self,r,c):
+        if r>2 or c>2:return None
+        return [i for i in range(81) if (i/3)%3==c and (i/27)==r]
+
+    # prints the sudoku grid all pretty-like
+    def printGrid(self):
+        row=''
+        for i, cell in enumerate(self.grid):
+            row+=str(cell)
+            if i%9==8:
+                print row
+                row=''
+                if (i/9)%3==2 and i<80:
+                    print '---|---|---'
+            elif i%3==2:
+                row+="|"
+        print row
+
+    # prints a list of unsolved squares and what they could be
+    def printUnsolved(self):
+        print "Unsolved:"
+        for i in self.unsolved:
+            print "({0!s},{1!s}) - {2!s}".format(i/9,i%9,self.couldBe[i])
+
+    # winnow couldbe list for unsolved squares
+    def updatePass(self):
+        updated=0
+        for i in self.unsolved:
+            thisRow=set([self.grid[x] for x in self.getRow(i/9)])
+            thisCol=set([self.grid[x] for x in self.getCol(i%9)])
+            thisBox=set([self.grid[x] for x in self.getBox(i/27,(i%9)/3)])
+            
+            cb_was=len(self.couldBe[i] or [])
+            self.couldBe[i]=list(set(self.couldBe[i]).difference(thisRow).difference(thisCol).difference(thisBox))
+            if len(self.couldBe[i])<cb_was:
+                updated+=1
+        return updated
+
+    # solve squares with only one couldBe entry
+    # or whose couldBe contains a value that doesn't exist elsewhere in the row/col/box
+    def solvePass(self):
+        if len(self.unsolved)==0:
+            return None
+        solved=0
+        for i in self.unsolved:
+            solution=None
+            thisRowCouldBe=set([c for x in self.getRow(i/9) if x!=i and self.couldBe[x] for c in self.couldBe[x]])
+            thisColCouldBe=set([c for x in self.getCol(i%9) if x!=i and self.couldBe[x] for c in self.couldBe[x]])
+            thisBoxCouldBe=set([c for x in self.getBox(i/27,(i%9)/3) if x!=i and self.couldBe[x] for c in self.couldBe[x]])
+            
+            if len(self.couldBe[i])==1:
+                solution=self.couldBe[i][0]
+            elif set(self.couldBe[i]).difference(thisRowCouldBe):
+                solution=set(self.couldBe[i]).difference(thisRowCouldBe).pop()
+            elif set(self.couldBe[i]).difference(thisColCouldBe):
+                solution=set(self.couldBe[i]).difference(thisColCouldBe).pop()
+            elif set(self.couldBe[i]).difference(thisBoxCouldBe):
+                solution=set(self.couldBe[i]).difference(thisBoxCouldBe).pop()
+            
+            if solution:
+                self.grid[i]=solution
+                self.couldBe[i]=None
+                self.unsolved.remove(i)
+                _=self.updatePass()
+                solved+=1
+        return solved
+    
+    def probSolve(self):
+        for unsolved_cell in self.unsolved:
+            for solution_option in self.couldBe[unsolved_cell]:
+                print "trying solution with ({0!s},{1!s}) = {2!s}".format(unsolved_cell/9,unsolved_cell%9,solution_option)
+                old_puzzle=self.getPuzzle()
+                tryPuzzle=sudoku(old_puzzle[:unsolved_cell]+str(solution_option)+old_puzzle[unsolved_cell+1:])
+                trySolution=tryPuzzle.solve()
+                if trySolution:
+                    self.setPuzzle(trySolution)
+                    return self.getPuzzle()
+        return None
+
+    def solve(self):
+        if v:tick=qa.tick()
+        counter=0
+        solves=1
+        while solves>0:
+            solves=self.solvePass()
+            counter+=1
+        if solves==None: 
+            if v:tick=qa.tock(tick,"Solved in {0!s} passes".format(counter))
+            return self.getPuzzle()
+        if v:tick=qa.tock(tick,"Deadlocked in {0!s} passes".format(counter))
+        return None
+
+""" 
+New solving methods:
+
+Swaps: identify locations where n cells in the same unit each contain the same n numbers; even if 
+these cells contain other numbers that aren't explicitly forced out of them, they can't really take
+those values because they are the only place where those values could appear.
+
+2-group push: if the only possible cells in a box for some number are in the same row/col, we can 
+eliminate other instances of that number in the couldBe list in that row/col.
+
+Probabilistic: try something and see if it solves, if not go back to where you were. effectively 
+recursion.
+
+well, probabilistic solving should take care of the rest.
 """
 
 sudokutxt=open("sudoku.txt","r")
 
 def getPuzzles(f):
-	puzzles=[]
-	i=-1
-	for row in f.readlines():
-		if row.__contains__('Grid'):
-			puzzles.append('')
-			i+=1
-		else:
-			puzzles[i]+=row.replace('\r\n','')
-	return puzzles
-
+    puzzles=[]
+    i=-1
+    for row in f.readlines():
+        if row.__contains__('Grid'):
+            puzzles.append('')
+            i+=1
+        else:
+            puzzles[i]+=row.replace('\r\n','')
+    return puzzles
 
 puzzles=getPuzzles(sudokutxt)
 
+
+solves=[]
+i=1
 for puzzle in puzzles:
-	p=sudoku(puzzle)
-	p.solve()
+    print "Puzzle {0!s}".format(i)
+    p=sudoku(puzzle)
+    this_solve=p.solve()
+    if this_solve:
+        solves.append(int(this_solve[0:3]))
+    else:
+        this_solve=p.probSolve()
+        if this_solve:
+            solves.append(int(this_solve[0:3]))
+    i+=1
 print solves
 print sum(solves)
+""""""
 
 """
-5
-41
-42
-46
-47
-48
-49
+[483, 245, 462, 137, 523, 176, 143, 487, 814, 761, 976, 962, 397, 639, 697, 361, 359, 786, 743, 782, 428, 425, 348, 124, 361, 581, 387, 345, 235, 298, 761, 132, 698, 852, 453, 516, 945, 365, 134, 193, 814, 384, 469, 316, 586, 954, 159, 861, 294, 351]
+24702
 """
