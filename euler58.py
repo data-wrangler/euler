@@ -85,7 +85,7 @@ v=qa.v
 
 pc_total = 1
 if v:first_tick=tick=qa.tick("generating prime list")
-pl=prime.primeListDb(22154371)
+pl=prime.primeListDb(24871050)
 if v:tick=qa.tock(tick,"generated up to {0!s}".format(pl.getList()[-1]))
 spiral=[]
 nspiral=1.0
